@@ -288,13 +288,18 @@ Then
 \end{lemma}
 
 \begin{proof}
-Exponentiating~\eqref{eq:hyp} gives
+Exponentiating~\eqref{eq:hyp} and using $\exp(z)=1+z+O(z^2)$ gives
 $x_n = e^{c}\bigl(1 + A n^{-(k+1)} + B n^{-(k+2)} + O(n^{-(k+3)})\bigr)$ for
-$k\ge1$ (for $k=0$ the $n^{-2}$ coefficient becomes $B+A^2/2$, which is
-immaterial at the order computed). Writing
-$x_n = e^{c}\bigl(1 + A n^{-(k+1)} + R_n\bigr)$ we therefore have
-$R_n = O(n^{-(k+2)})$, whence $\Delta R_n = O(n^{-(k+3)})$ by the triangle
-inequality. Hence
+$k\ge1$, since $(n^{-(k+1)})^2 = O(n^{-(k+3)})$; for $k=0$ the $n^{-2}$
+coefficient instead becomes $B+A^2/2$, which is immaterial at the order
+computed. Writing $x_n = e^{c}\bigl(1 + A n^{-(k+1)} + R_n\bigr)$ we thus have
+$R_n = B n^{-(k+2)} + O(n^{-(k+3)})$, so
+\[
+  \Delta R_n = B\bigl[(n+1)^{-(k+2)} - n^{-(k+2)}\bigr] + O(n^{-(k+3)})
+            = O(n^{-(k+3)})
+\]
+(the mean value theorem gives the first term, and the triangle inequality
+bounds the remainder). Hence
 \[
   D_n = e^{c}A\bigl[(n+1)^{-(k+1)} - n^{-(k+1)}\bigr] + O(n^{-(k+3)}),
 \]

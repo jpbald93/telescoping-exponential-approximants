@@ -71,7 +71,7 @@ print()
 print("=" * 72)
 print("PART 3  [num] the families, the limit, and the difference/error asymptotics")
 print("=" * 72)
-mp.mp.dps = 60
+mp.mp.dps = 150
 M3 = mp.sqrt(3)
 def xI(n, cc):
     n = mp.mpf(n); return mp.power(1 + 1/n + M3/(6*n**2), cc*n + cc*(mp.mpf(1)/2 - M3/6))
@@ -120,18 +120,24 @@ for cc in [mp.mpf(2), mp.mpf(-1)]:
               f"  |DI|={sf(mp.fabs(xI(n+1,cc)-xI(n,cc)))}  |DII|={sf(mp.fabs(xII(n+1,cc)-xII(n,cc)))}")
 
 # assert every tabulated value against the manuscript (3 s.f., rel tol 0.5%)
-EXP1 = {100:(1.74e-8,5.09e-10,2.41e-7,7.06e-9), 500:(1.40e-10,8.36e-13,1.95e-9,1.16e-11),
-        1000:(1.75e-11,5.24e-14,2.44e-10,7.29e-13), 5000:(1.40e-13,8.40e-17,1.95e-12,1.17e-15)}
+def rounds_to(v, s):
+    return mp.nstr(v, 3) == mp.nstr(mp.mpf(s), 3)
+
+# assert every tabulated value ROUNDS to the manuscript's printed 3-s.f. string
+EXP1 = {100:('1.74e-8','5.09e-10','2.41e-7','7.06e-9'),
+        500:('1.40e-10','8.36e-13','1.95e-9','1.16e-11'),
+        1000:('1.75e-11','5.24e-14','2.44e-10','7.29e-13'),
+        5000:('1.40e-13','8.40e-17','1.95e-12','1.17e-15')}
 for n, exp in EXP1.items():
-    for got, e in zip(T1[n], exp):
-        check(abs(float(got)-e) <= 0.005*e, f"Table1 n={n}: {float(got):.3e} ~ {e:.2e}")
-EXP2 = {(2,1000):(9.52e-11,2.85e-13,3.97e-12), (2,5000):(7.62e-13,4.57e-16,6.36e-15),
-        (-1,1000):(2.37e-12,7.09e-15,9.87e-14), (-1,5000):(1.90e-14,1.14e-17,1.58e-16)}
+    for got, s in zip(T1[n], exp):
+        check(rounds_to(got, s), f"Table1 n={n}: {mp.nstr(got,3)} == {s}")
+EXP2 = {(2,1000):('9.52e-11','2.85e-13','3.97e-12'), (2,5000):('7.62e-13','4.57e-16','6.36e-15'),
+        (-1,1000):('2.37e-12','7.09e-15','9.87e-14'), (-1,5000):('1.90e-14','1.14e-17','1.58e-16')}
 for (cc, n), exp in EXP2.items():
     got = (mp.fabs(xI(n,mp.mpf(cc))-mp.e**cc), mp.fabs(xI(n+1,mp.mpf(cc))-xI(n,mp.mpf(cc))),
            mp.fabs(xII(n+1,mp.mpf(cc))-xII(n,mp.mpf(cc))))
-    for g, e in zip(got, exp):
-        check(abs(float(g)-e) <= 0.005*e, f"Table2 c={cc} n={n}: {float(g):.3e} ~ {e:.2e}")
+    for g, s in zip(got, exp):
+        check(rounds_to(g, s), f"Table2 c={cc} n={n}: {mp.nstr(g,3)} == {s}")
 
 print()
 print("=" * 72)
@@ -146,14 +152,14 @@ def fit(f):
     sst = mp.fsum((ys[i]-my)**2 for i in range(m))
     ssr = mp.fsum((ys[i]-(a*xs[i]+b0))**2 for i in range(m))
     return a, b0, 1 - ssr/sst
-EXP5 = {"I": (-3.9973, -2.9696), "II": (-3.9969, -0.3391)}
+EXP5 = {"I": (-3.9973, -2.9696, 0.9999997), "II": (-3.9969, -0.3391, 0.9999996)}
 for k, f in XF.items():
     a, bb, r2 = fit(f)
     print(f"    branch {k}: slope={mp.nstr(a,8)}  intercept={mp.nstr(bb,8)}  R2={mp.nstr(r2,8)}")
     check(abs(float(a) + 4) < 0.01, f"branch {k}: slope consistent with -4")
     check(abs(float(a)-EXP5[k][0]) < 5e-4 and abs(float(bb)-EXP5[k][1]) < 5e-4,
-          f"branch {k}: slope/intercept match the manuscript {EXP5[k]}")
-    check(float(r2) > 0.999999, f"branch {k}: R^2 > 0.999999")
+          f"branch {k}: slope/intercept match the manuscript {EXP5[k][:2]}")
+    check(abs(float(r2)-EXP5[k][2]) < 1e-7, f"branch {k}: R^2 matches the printed value {EXP5[k][2]}")
 
 print()
 print("=" * 72)

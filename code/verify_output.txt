@@ -58,34 +58,34 @@ PART 4  [num] Table 1 (c=1) and Table 2 (c=2,-1), 3 s.f.
       c= 2  n= 5000  |xI-e^c|=7.62e-13  |DI|=4.57e-16  |DII|=6.36e-15
       c=-1  n= 1000  |xI-e^c|=2.37e-12  |DI|=7.09e-15  |DII|=9.87e-14
       c=-1  n= 5000  |xI-e^c|=1.9e-14  |DI|=1.14e-17  |DII|=1.58e-16
-  [ok ] Table1 n=100: 1.736e-08 ~ 1.74e-08
-  [ok ] Table1 n=100: 5.090e-10 ~ 5.09e-10
-  [ok ] Table1 n=100: 2.410e-07 ~ 2.41e-07
-  [ok ] Table1 n=100: 7.058e-09 ~ 7.06e-09
-  [ok ] Table1 n=500: 1.399e-10 ~ 1.40e-10
-  [ok ] Table1 n=500: 8.356e-13 ~ 8.36e-13
-  [ok ] Table1 n=500: 1.947e-09 ~ 1.95e-09
-  [ok ] Table1 n=500: 1.163e-11 ~ 1.16e-11
-  [ok ] Table1 n=1000: 1.751e-11 ~ 1.75e-11
-  [ok ] Table1 n=1000: 5.240e-14 ~ 5.24e-14
-  [ok ] Table1 n=1000: 2.437e-10 ~ 2.44e-10
-  [ok ] Table1 n=1000: 7.294e-13 ~ 7.29e-13
-  [ok ] Table1 n=5000: 1.401e-13 ~ 1.40e-13
-  [ok ] Table1 n=5000: 8.405e-17 ~ 8.40e-17
-  [ok ] Table1 n=5000: 1.952e-12 ~ 1.95e-12
-  [ok ] Table1 n=5000: 1.171e-15 ~ 1.17e-15
-  [ok ] Table2 c=2 n=1000: 9.517e-11 ~ 9.52e-11
-  [ok ] Table2 c=2 n=1000: 2.849e-13 ~ 2.85e-13
-  [ok ] Table2 c=2 n=1000: 3.966e-12 ~ 3.97e-12
-  [ok ] Table2 c=2 n=5000: 7.619e-13 ~ 7.62e-13
-  [ok ] Table2 c=2 n=5000: 4.569e-16 ~ 4.57e-16
-  [ok ] Table2 c=2 n=5000: 6.364e-15 ~ 6.36e-15
-  [ok ] Table2 c=-1 n=1000: 2.369e-12 ~ 2.37e-12
-  [ok ] Table2 c=-1 n=1000: 7.091e-15 ~ 7.09e-15
-  [ok ] Table2 c=-1 n=1000: 9.872e-14 ~ 9.87e-14
-  [ok ] Table2 c=-1 n=5000: 1.897e-14 ~ 1.90e-14
-  [ok ] Table2 c=-1 n=5000: 1.137e-17 ~ 1.14e-17
-  [ok ] Table2 c=-1 n=5000: 1.584e-16 ~ 1.58e-16
+  [ok ] Table1 n=100: 1.74e-8 == 1.74e-8
+  [ok ] Table1 n=100: 5.09e-10 == 5.09e-10
+  [ok ] Table1 n=100: 2.41e-7 == 2.41e-7
+  [ok ] Table1 n=100: 7.06e-9 == 7.06e-9
+  [ok ] Table1 n=500: 1.4e-10 == 1.40e-10
+  [ok ] Table1 n=500: 8.36e-13 == 8.36e-13
+  [ok ] Table1 n=500: 1.95e-9 == 1.95e-9
+  [ok ] Table1 n=500: 1.16e-11 == 1.16e-11
+  [ok ] Table1 n=1000: 1.75e-11 == 1.75e-11
+  [ok ] Table1 n=1000: 5.24e-14 == 5.24e-14
+  [ok ] Table1 n=1000: 2.44e-10 == 2.44e-10
+  [ok ] Table1 n=1000: 7.29e-13 == 7.29e-13
+  [ok ] Table1 n=5000: 1.4e-13 == 1.40e-13
+  [ok ] Table1 n=5000: 8.4e-17 == 8.40e-17
+  [ok ] Table1 n=5000: 1.95e-12 == 1.95e-12
+  [ok ] Table1 n=5000: 1.17e-15 == 1.17e-15
+  [ok ] Table2 c=2 n=1000: 9.52e-11 == 9.52e-11
+  [ok ] Table2 c=2 n=1000: 2.85e-13 == 2.85e-13
+  [ok ] Table2 c=2 n=1000: 3.97e-12 == 3.97e-12
+  [ok ] Table2 c=2 n=5000: 7.62e-13 == 7.62e-13
+  [ok ] Table2 c=2 n=5000: 4.57e-16 == 4.57e-16
+  [ok ] Table2 c=2 n=5000: 6.36e-15 == 6.36e-15
+  [ok ] Table2 c=-1 n=1000: 2.37e-12 == 2.37e-12
+  [ok ] Table2 c=-1 n=1000: 7.09e-15 == 7.09e-15
+  [ok ] Table2 c=-1 n=1000: 9.87e-14 == 9.87e-14
+  [ok ] Table2 c=-1 n=5000: 1.9e-14 == 1.90e-14
+  [ok ] Table2 c=-1 n=5000: 1.14e-17 == 1.14e-17
+  [ok ] Table2 c=-1 n=5000: 1.58e-16 == 1.58e-16
 
 ========================================================================
 PART 5  [num] log-log regression over the appendix grid n=100..10000 step 25
@@ -93,11 +93,11 @@ PART 5  [num] log-log regression over the appendix grid n=100..10000 step 25
     branch I: slope=-3.997288  intercept=-2.9696306  R2=0.99999972
   [ok ] branch I: slope consistent with -4
   [ok ] branch I: slope/intercept match the manuscript (-3.9973, -2.9696)
-  [ok ] branch I: R^2 > 0.999999
+  [ok ] branch I: R^2 matches the printed value 0.9999997
     branch II: slope=-3.9969039  intercept=-0.33910374  R2=0.99999964
   [ok ] branch II: slope consistent with -4
   [ok ] branch II: slope/intercept match the manuscript (-3.9969, -0.3391)
-  [ok ] branch II: R^2 > 0.999999
+  [ok ] branch II: R^2 matches the printed value 0.9999996
 
 ========================================================================
 PART 6  [num] classical baseline:  x_n=(1+a/n)^(bn),  D_n ~ e^{ab} a^2 b/(2n^2)
