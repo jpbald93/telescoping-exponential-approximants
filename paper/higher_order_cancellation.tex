@@ -1,0 +1,715 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[htt]{hyphenat}
+\usepackage[hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\hyphenation{ap-prox-i-mant telescop-ing can-cel-la-tion}
+\sloppy
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dd}{\,\mathrm{d}}
+\DeclareMathOperator{\cv}{\leq_{\mathrm{cx}}}
+
+\title{Higher-Order Cancellation in Exponential Approximants:\\
+An Explicit $O(n^{-4})$ Telescoping Family}
+\author{Josh Bald\\ \small Independent Researcher\\ \small jpbald93@gmail.com}
+\date{September 2026 \quad (V5)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study elementary sequences $(x_n)$ converging to exponential constants $e^{c}$
+for which the successive differences $D_n := x_{n+1}-x_n$ form a rapidly decaying
+telescoping tail. For any convergent sequence $(x_n)\to L$, the identity
+$L = x_1 + \sum_{n\ge1} D_n$ reduces quantitative convergence questions to
+asymptotics of $D_n$; in particular, if $D_n = K n^{-(k+1)} + O(n^{-(k+2)})$ then
+$L - x_N = \tfrac{K}{k} N^{-k} + O(N^{-(k+1)})$. Within the constrained ansatz
+\[
+  x_n = \Bigl(1 + \frac{a_1}{n} + \frac{a_2}{n^2}\Bigr)^{cn+\gamma},
+\]
+we use logarithmic expansions and coefficient cancellation to enforce higher-order
+decay of $D_n$. The methodological ingredients are classical; the point here is
+that, for this specific quadratic-base/affine-exponent competitor class, the
+order-$3$ constraints admit an explicit closed-form solution.
+
+Our main result is a two-branch family achieving telescoping order $3$
+(i.e.\ $|D_n| = \Theta(n^{-4}))$ for any real $c \neq 0$:
+\[
+  x_n^{(\mathrm{I})} = \Bigl(1+\frac1n+\frac{\sqrt3}{6n^2}\Bigr)^{cn+c(\frac12-\frac{\sqrt3}{6})},
+  \qquad
+  x_n^{(\mathrm{II})} = \Bigl(1+\frac1n-\frac{\sqrt3}{6n^2}\Bigr)^{cn+c(\frac12+\frac{\sqrt3}{6})}.
+\]
+We prove $\lim_{n\to\infty} x_n^{(\cdot)} = e^{c}$ and derive explicit signed
+asymptotics
+\[
+  D_n^{(\cdot)} \sim -\,\frac{3e^{c}A_3^{(\cdot)}}{n^{4}},
+  \qquad
+  A_3^{(\mathrm{I})} = \frac{c\,(2\sqrt3-3)}{72},\quad
+  A_3^{(\mathrm{II})} = -\frac{c\,(3+2\sqrt3)}{72},
+\]
+implying the tail error $|x_N - e^{c}| = \Theta(N^{-3})$ for $c\neq0$. (At $c=0$
+both sequences are identically $1$ and the asymptotic statements are vacuous.)
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Telescoping representations}
+For any convergent sequence $(x_n)\to L$, we have the telescoping identity
+\[
+  L = x_1 + \sum_{n=1}^{\infty}(x_{n+1}-x_n) = x_1 + \sum_{n=1}^{\infty} D_n .
+\]
+The speed of convergence is governed by the decay of the differences $D_n$;
+faster decay of $D_n$ yields a smaller tail
+\[
+  R_N := \sum_{n>N} D_n = L - x_{N+1}.
+\]
+
+\subsection{Positivity of the bases (well-defined real powers)}
+Because we use real (not complex) exponentiation, we record a positivity check
+ensuring the bases remain positive for all $n\ge1$.
+
+\begin{lemma}[Positivity of the bases]\label{lem:pos}
+For all integers $n\ge1$,
+\[
+  1+\frac1n+\frac{\sqrt3}{6n^2} > 0
+  \quad\text{and}\quad
+  1+\frac1n-\frac{\sqrt3}{6n^2} > 0 .
+\]
+Hence $x_n^{(\mathrm{I})}$ and $x_n^{(\mathrm{II})}$ are well-defined as real
+numbers for all $n\ge1$.
+\end{lemma}
+
+\begin{proof}
+The first inequality is immediate since $1+\tfrac1n+\tfrac{\sqrt3}{6n^2}>1$.
+For the second, for $n\ge1$ we have $n^{-2}\le1$, hence
+$1+\tfrac1n-\tfrac{\sqrt3}{6n^2}\ge 1-\tfrac{\sqrt3}{6}=\tfrac{6-\sqrt3}{6}>0$.
+\end{proof}
+
+\subsection{From difference decay to error decay}
+The following standard comparison makes the meaning of ``telescoping order''
+explicit.
+
+\begin{lemma}[Tail rate from difference rate]\label{lem:tail}
+Let $(x_n)$ converge to $L$ and set $D_n := x_{n+1}-x_n$. Suppose that for some
+$k\ge1$,
+\[
+  D_n = K n^{-(k+1)} + O(n^{-(k+2)}) \qquad (K\neq0).
+\]
+Then
+\[
+  L - x_N = \sum_{n\ge N} D_n = \frac{K}{k}\,N^{-k} + O(N^{-(k+1)}).
+\]
+In particular, telescoping order $k$ (i.e.\ $D_n=\Theta(n^{-(k+1)})$) corresponds
+to an $O(N^{-k})$ convergence rate for the error $|x_N-L|$.
+\end{lemma}
+
+\begin{proof}
+This follows from the telescoping identity and the asymptotic evaluation of the
+tail of a $p$-series,
+$\sum_{n\ge N} n^{-(k+1)} = \tfrac1k N^{-k} + O(N^{-(k+1)})$.
+\end{proof}
+
+\begin{remark}[Signed asymptotics vs.\ absolute bounds]\label{rem:theta}
+Lemma~\ref{lem:tail} is stated with a \emph{signed} asymptotic for $D_n$; the
+conclusion $L-x_N=\Theta(N^{-k})$ uses that sign. A bare absolute bound
+$|D_n|=\Theta(n^{-(k+1)})$ does \emph{not} by itself force a $\Theta$ tail rate:
+e.g.\ $x_n = 1+(-1)^n n^{-4}$ has $|D_n|=\Theta(n^{-4})$ but $|x_n-1|=n^{-4}$,
+not $\Theta(n^{-3})$. Throughout this paper the relevant families admit genuine
+signed power-series expansions, so Lemma~\ref{lem:tail} applies directly.
+\end{remark}
+
+\subsection{Why telescoping matters (context and applications)}
+Although the present paper focuses on elementary closed forms for $e^{c}$, the
+telescoping viewpoint is broadly useful as a way to translate convergence into an
+explicit remainder model. Many classic acceleration techniques can be viewed as
+constructing and cancelling leading terms in an error expansion, and the NIST DLMF
+provides standard language and examples for sequence transformations that
+accelerate convergence (Aitken, Shanks/Wynn-$\varepsilon$, Levin--Weniger,
+etc.)~\cite{dlmf39} (see also~\cite{corless2023}). In a more recent probabilistic
+framing, Oates--Karvonen et al.\ propose probabilistic Richardson extrapolation,
+where an error model is fitted/propagated to accelerate convergence while
+quantifying uncertainty~\cite{richardson2024,richardson2024arxiv}. In this light,
+explicit telescoping families with known $D_n$ asymptotics provide a clean
+laboratory for validating order-detection by regression and illustrating how
+algebraic constraints enforce higher-order cancellation in a controlled setting.
+
+\subsection{Classical examples and the classical design principle}
+The prototypical example is Euler's sequence $(1+1/n)^n\to e$. More generally,
+for $(1+a/n)^{bn}\to e^{ab}$, a direct expansion of the logarithm
+(Proposition~\ref{prop:order1} below) gives
+\begin{equation}\label{eq:classical}
+  D_n = \frac{e^{ab}\,a^2 b}{2n^2} + O(n^{-3}),
+\end{equation}
+so the leading term vanishes \emph{iff} $a=0$ or $b=0$ (both of which give the
+constant sequence $1$). In particular $(1+c/n)^{cn}$ has limit $e^{c^2}$ and
+difference order exactly $\Theta(n^{-2})$ for $c\neq0$; at $c=1$ it is Euler's
+sequence. (An earlier draft of this work asserted the stronger and incorrect
+claim that the leading term cancels at $a=b$; see
+Remark~\ref{rem:correction}.) The methodology used throughout this
+paper---taking logarithms, expanding in powers of $1/n$, and enforcing coefficient
+cancellations to increase decay order---is standard asymptotic-expansion practice;
+see, for example,~\cite{flajolet}.
+
+\subsection{Competitor class and novelty boundary}
+\begin{definition}[Competitor class: quadratic base, affine exponent]\label{def:comp}
+We call a sequence \emph{quadratic-base, affine-exponent} if it has the form
+\[
+  x_n = \Bigl(1 + \frac{a_1}{n} + \frac{a_2}{n^2}\Bigr)^{cn+\gamma},
+\]
+with parameters $a_1,a_2,\gamma$ given in elementary closed form (and $c$ a
+prescribed real constant).
+\end{definition}
+
+Within this competitor class, telescoping-order constraints reduce to a finite
+algebraic system in $(a_1,a_2,\gamma)$ (after the normalizations described later).
+The novelty boundary in this paper is therefore not the existence of coefficient
+matching, but the fact that in the quadratic-base, affine-exponent class one can
+solve the order-$3$ constraints explicitly in closed form and obtain a two-branch
+parameterization together with explicit leading asymptotic constants.
+
+\subsection{Relation to prior work and novelty (conservative framing)}
+Refined investigations of exponential constants and limiting processes (including
+$e$ and the Euler--Mascheroni constant $\gamma$) have a long history; see
+Glaisher~\cite{glaisher}, Adams~\cite{adams}, and Mitchell--Strain~\cite{mitchell}.
+At a methodological level, logarithmic expansions and cancellation arguments are
+classical; see Brent~\cite{brent} and~\cite{flajolet}. Modern
+convergence-acceleration context can be found in the DLMF
+overview~\cite{dlmf39} and Corless~\cite{corless2023}. The present work also builds
+on the telescoping-difference framework developed in~\cite{balditerative}.
+
+Accordingly, the novelty of this paper does not lie in asymptotic expansions per
+se, but in producing a fully explicit closed-form order-$3$ telescoping family
+inside the tightly constrained competitor class of Definition~\ref{def:comp},
+including explicit signed leading coefficients controlling $D_n$ and a direct
+implication for the $N^{-3}$ error rate.
+
+\subsection{Main result}
+\begin{theorem}[Explicit order-$3$ family in a quadratic-base, affine-exponent ansatz]\label{thm:main}
+Fix $c\in\R\setminus\{0\}$. Define
+\[
+  x_n^{(\mathrm{I})} := \Bigl(1+\frac1n+\frac{\sqrt3}{6n^2}\Bigr)^{cn+c(\frac12-\frac{\sqrt3}{6})},
+  \qquad
+  x_n^{(\mathrm{II})} := \Bigl(1+\frac1n-\frac{\sqrt3}{6n^2}\Bigr)^{cn+c(\frac12+\frac{\sqrt3}{6})}.
+\]
+Then for each family:
+\begin{enumerate}
+  \item $\displaystyle \lim_{n\to\infty} x_n^{(\cdot)} = e^{c}$.
+  \item $D_n^{(\cdot)} := x_{n+1}^{(\cdot)} - x_n^{(\cdot)}$ satisfies
+        $|D_n^{(\cdot)}| = \Theta(n^{-4})$.
+\end{enumerate}
+More precisely,
+\begin{equation}\label{eq:mainasy}
+  D_n^{(\cdot)} \sim -\,\frac{3e^{c}A_3^{(\cdot)}}{n^{4}}
+  \qquad\text{as } n\to\infty,
+\end{equation}
+where
+\[
+  A_3^{(\mathrm{I})} = \frac{c\,(2\sqrt3-3)}{72},
+  \qquad
+  A_3^{(\mathrm{II})} = -\frac{c\,(3+2\sqrt3)}{72},
+\]
+so $K^{(\cdot)} = 3e^{c}\,|A_3^{(\cdot)}|$.
+\end{theorem}
+
+\begin{remark}[Branch labeling and sign]\label{rem:branch}
+We label branches by the magnitude of the leading asymptotic coefficient:
+$x_n^{(\mathrm{I})}$ has smaller $|D_n|$ (faster convergence) and
+$x_n^{(\mathrm{II})}$ has larger $|D_n|$ (slower convergence), since
+$0<2\sqrt3-3<3+2\sqrt3$. For $c>0$ the two leading errors have \emph{opposite
+signs}: $x_n^{(\mathrm{I})}$ approaches $e^{c}$ from above (decreasing), while
+$x_n^{(\mathrm{II})}$ approaches $e^{c}$ from below (increasing); the signs
+reverse for $c<0$.
+\end{remark}
+
+\section{Framework and Asymptotic Expansion}
+
+\subsection{General setup}
+We consider sequences of the form
+\[
+  x_n = f(1/n)^{g(n)}, \qquad
+  f(t) = 1 + \alpha_1 t + \alpha_2 t^2 + \cdots, \qquad
+  g(n) = \beta n + \gamma .
+\]
+
+\begin{definition}[Telescoping order]\label{def:order}
+A sequence $(x_n)\to L$ has \emph{telescoping order} $k$ if
+$|D_n| = \Theta(n^{-(k+1)})$.
+\end{definition}
+
+\begin{remark}\label{rem:order}
+The phrase ``order $k$'' here refers to the decay rate
+$D_n\asymp n^{-(k+1)}$. By Lemma~\ref{lem:tail}, this corresponds to an
+$O(N^{-k})$ rate for the approximation error $|x_N-L|$ (with a signed
+asymptotic, as discussed in Remark~\ref{rem:theta}).
+\end{remark}
+
+\subsection{Asymptotic expansion of $\log x_n$}
+Write $u_n := f(1/n)-1 = \alpha_1/n + \alpha_2/n^2 + \cdots$. Then
+$\log(1+u_n) = u_n - \tfrac{u_n^2}{2} + \tfrac{u_n^3}{3} - \cdots$ and
+$\log x_n = g(n)\log(1+u_n)$. Expanding in powers of $1/n$,
+\begin{equation}\label{eq:logexp}
+  \log x_n = c_0 + \frac{A_1}{n} + \frac{A_2}{n^2} + \frac{A_3}{n^3} + \frac{A_4}{n^4} + O(n^{-5}),
+\end{equation}
+where $c_0,A_1,A_2,\dots$ are explicit polynomials in $\{\alpha_j,\beta,\gamma\}$
+(given in \S\ref{sec:order3}).
+
+\subsection{From $\log x_n$ to $D_n$}
+The following lemma is the bridge from the logarithmic expansion to the
+difference asymptotic. Note the additional regularity hypothesis: a bare
+$O(n^{-(k+2)})$ remainder cannot be differenced as though it were smooth (the
+remainder's finite difference need not be $O(n^{-(k+3)})$).
+
+\begin{lemma}[Log-expansion implies difference asymptotic]\label{lem:logdiff}
+Suppose that for some integer $k\ge0$ the sequence admits an asymptotic
+expansion in powers of $1/n$,
+\begin{equation}\label{eq:hyp}
+  \log x_n = c + \frac{A}{n^{k+1}} + \frac{B}{n^{k+2}} + O(n^{-(k+3)}),
+  \qquad A\neq0 .
+\end{equation}
+Then
+\[
+  x_n = e^{c}\Bigl(1 + \frac{A}{n^{k+1}} + O(n^{-(k+2)})\Bigr),
+  \qquad
+  D_n := x_{n+1}-x_n = -(k+1)e^{c}\,A\,n^{-(k+2)} + O(n^{-(k+3)}).
+\]
+\end{lemma}
+
+\begin{proof}
+Exponentiating~\eqref{eq:hyp} gives
+$x_n = e^{c}\bigl(1 + A n^{-(k+1)} + B n^{-(k+2)} + O(n^{-(k+3)})\bigr)$ for
+$k\ge1$ (for $k=0$ the $n^{-2}$ coefficient becomes $B+A^2/2$, which is
+immaterial at the order computed). Writing
+$x_n = e^{c}\bigl(1 + A n^{-(k+1)} + R_n\bigr)$ we therefore have
+$R_n = O(n^{-(k+2)})$, whence $\Delta R_n = O(n^{-(k+3)})$ by the triangle
+inequality. Hence
+\[
+  D_n = e^{c}A\bigl[(n+1)^{-(k+1)} - n^{-(k+1)}\bigr] + O(n^{-(k+3)}),
+\]
+and $(n+1)^{-(k+1)} - n^{-(k+1)} = -(k+1)n^{-(k+2)} + O(n^{-(k+3)})$ by the mean
+value theorem, which completes the proof.
+\end{proof}
+
+\emph{Design principle.} To achieve telescoping order $k$ in the sense of
+Definition~\ref{def:order}, enforce $c_0=c$ and $A_1=\cdots=A_{k-1}=0$, leaving
+$A_k\neq0$. (Indeed, if the first nonzero coefficient is $A_k$, then
+$\log x_n = c + A_k n^{-k} + O(n^{-(k+1)})$, and
+Lemma~\ref{lem:logdiff} with the relabeled index $k-1$ gives
+$D_n = -k e^{c}A_k n^{-(k+1)} + O(n^{-(k+2)}) = \Theta(n^{-(k+1)})$, i.e.\ order
+$k$.)
+
+\section{Order-1: Classical Cancellation}
+\begin{proposition}[Two-parameter family]\label{prop:order1}
+For $x_n = (1+a/n)^{bn}$ with real $a,b$ and $n$ sufficiently large that the base
+is positive,
+\[
+  \lim_{n\to\infty} x_n = e^{ab},
+  \qquad
+  D_n = \frac{e^{ab}\,a^2 b}{2n^2} + O(n^{-3}).
+\]
+Consequently $D_n = O(n^{-3})$ if and only if $a=0$ or $b=0$ (in which case
+$x_n\equiv1$); for $a,b\neq0$ the difference order is exactly $\Theta(n^{-2})$.
+\end{proposition}
+
+\begin{proof}
+Since $\log(1+a/n) = a/n - a^2/(2n^2) + O(n^{-3})$,
+\[
+  \log x_n = bn\log\!\Bigl(1+\frac{a}{n}\Bigr)
+           = ab - \frac{a^2 b}{2n} + \frac{a^3 b}{3n^2} + O(n^{-3}).
+\]
+Hence $x_n = e^{ab}\bigl(1 - \tfrac{a^2 b}{2n} + O(n^{-2})\bigr)$, and
+Lemma~\ref{lem:logdiff} with $k=0$ and $A=-a^2b/2$ gives
+$D_n = e^{ab}\,\tfrac{a^2 b}{2n^2} + O(n^{-3})$.
+\end{proof}
+
+\begin{remark}[Correction of an earlier draft]\label{rem:correction}
+An earlier version of this paper stated
+$D_n = e^{ab}ab(a-b)/(2n^2)+O(n^{-3})$ and concluded that the leading term
+cancels at $a=b$. That is incorrect: the leading coefficient is $a^2b/2$, not
+$ab(a-b)/2$, and it does not vanish at $a=b$. Numerically, for Euler's sequence
+($a=b=1$) one has $n^2 D_n/e \to 1/2$, i.e.\ $D_n=\Theta(n^{-2})$, not
+$O(n^{-3})$. The corrected statement is Proposition~\ref{prop:order1}; see also
+Table~\ref{tab:compare}.
+\end{remark}
+
+\section{Explicit Order-3 Constructions}\label{sec:order3}
+
+\subsection{Quadratic base, affine exponent}
+Consider
+\[
+  x_n = \Bigl(1 + \frac{\alpha_1}{n} + \frac{\alpha_2}{n^2}\Bigr)^{\beta n+\gamma}.
+\]
+Let $u_n = \alpha_1/n + \alpha_2/n^2$. Expanding $\log(1+u_n)$ and multiplying by
+$\beta n + \gamma$ yields
+\begin{align}
+  c_0 &= \alpha_1\beta, \label{eq:c0}\\
+  A_1 &= \alpha_1\gamma + \beta\alpha_2 - \frac{\alpha_1^2\beta}{2}, \label{eq:A1}\\
+  A_2 &= \gamma\alpha_2 - \frac{\alpha_1^2\gamma}{2} + \frac{\alpha_1^3\beta}{3} - \alpha_1\alpha_2\beta, \label{eq:A2}\\
+  A_3 &= \gamma\Bigl(\frac{\alpha_1^3}{3} - \alpha_1\alpha_2\Bigr)
+        + \beta\Bigl(\alpha_1^2\alpha_2 - \frac{\alpha_1^4}{4} - \frac{\alpha_2^2}{2}\Bigr), \label{eq:A3}\\
+  A_4 &= \gamma\Bigl(\alpha_1^2\alpha_2 - \frac{\alpha_1^4}{4} - \frac{\alpha_2^2}{2}\Bigr)
+        + \beta\Bigl(\frac{\alpha_1^5}{5} - \alpha_1^3\alpha_2 + \alpha_1\alpha_2^2\Bigr). \label{eq:A4}
+\end{align}
+(The $A_4/n^4$ term is quoted for completeness; it controls the subleading
+correction and is used in \S\ref{sec:sub}.)
+
+\begin{remark}[Correction of an earlier draft]\label{rem:eq4}
+An earlier version printed the $\beta$-part of~\eqref{eq:A3} as
+$\beta(\alpha_1^4/4 - \alpha_1^2\alpha_2/2)$, with two incorrect signs and the
+$- \alpha_2^2/2$ term missing. The correct form is~\eqref{eq:A3}. As a check,
+substituting the branch parameters into the incorrect form gives
+$c(9-4\sqrt3)/18$, which agrees neither with the correct value nor with the
+earlier draft's own stated constant.
+\end{remark}
+
+\subsection{Constraint system and closed-form solutions}
+To achieve telescoping order $3$ we require $c_0=c$, $A_1=0$, $A_2=0$. We have
+four parameters $\{\alpha_1,\alpha_2,\beta,\gamma\}$ and three constraints. Fix
+$\alpha_1=1$ and $\beta=c$ to satisfy $c_0=c$. The remaining constraints yield
+\[
+  \gamma + c\alpha_2 - \frac{c}{2} = 0,
+  \qquad
+  \gamma\alpha_2 - \frac{\gamma}{2} + \frac{c}{3} - c\alpha_2 = 0.
+\]
+From the first, $\gamma = c(\tfrac12 - \alpha_2)$. Substituting into the second
+gives $\alpha_2^2 = \tfrac1{12}$, so $\alpha_2 = \pm\tfrac{\sqrt3}{6}$. Thus we
+obtain two explicit branches:
+\[
+  \text{Family I: } \alpha_2 = +\frac{\sqrt3}{6},\quad
+    \gamma = c\Bigl(\frac12 - \frac{\sqrt3}{6}\Bigr);
+  \qquad
+  \text{Family II: } \alpha_2 = -\frac{\sqrt3}{6},\quad
+    \gamma = c\Bigl(\frac12 + \frac{\sqrt3}{6}\Bigr).
+\]
+
+\subsection{Explicit formula for $A_3$ and nonvanishing}\label{sec:sub}
+Substituting $\alpha_1=1$, $\beta=c$ and the corresponding $\gamma$ values
+into~\eqref{eq:A3} gives
+\[
+  A_3^{(\mathrm{I})} = \frac{c\,(2\sqrt3-3)}{72},
+  \qquad
+  A_3^{(\mathrm{II})} = -\frac{c\,(3+2\sqrt3)}{72}.
+\]
+Since $2\sqrt3-3>0$ and $3+2\sqrt3>0$, we have $A_3^{(\cdot)}\neq0$ whenever
+$c\neq0$ (with opposite signs on the two branches). By
+Lemma~\ref{lem:logdiff} (with $k=2$ and $A=A_3$),
+\[
+  D_n \sim -\,\frac{3e^{c}A_3}{n^{4}} .
+\]
+For completeness, substituting into~\eqref{eq:A4} gives the subleading
+coefficients
+\[
+  A_4^{(\mathrm{I})} = \frac{c\,(39-25\sqrt3)}{720},
+  \qquad
+  A_4^{(\mathrm{II})} = \frac{c\,(39+25\sqrt3)}{720},
+\]
+which quantify the $O(n^{-5})$ corrections to $D_n$ and address
+Open Problem~1 below.
+
+\begin{remark}[Correction of an earlier draft]\label{rem:const}
+An earlier version stated $A_3^{(\mathrm{I})}=c(9-5\sqrt3)/36$ and
+$A_3^{(\mathrm{II})}=c(9+5\sqrt3)/36$, together with the multiplier $-4e^{c}$
+in~\eqref{eq:mainasy}. Both are incorrect: the constants are as above, and the
+multiplier is $-3e^{c}$ (as required by Lemma~\ref{lem:logdiff} with $k=2$). The
+paper's own numerical tables already reflected the corrected values; only the
+closed forms were in error.
+\end{remark}
+
+\subsection{Proof of the main theorem}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+With the parameters above, we have $c_0=c$, $A_1=0$, $A_2=0$ and the stated
+$A_3\neq0$. Hence
+\[
+  \log x_n = c + \frac{A_3}{n^3} + \frac{A_4}{n^4} + O(n^{-5}),
+\]
+which is of the form~\eqref{eq:hyp} with $k=2$, $A=A_3$, $B=A_4$.
+Lemma~\ref{lem:logdiff} yields $D_n \sim -3e^{c}A_3 n^{-4}$, so
+$|D_n|=\Theta(n^{-4})$. Finally, Lemma~\ref{lem:tail} implies the corresponding
+error rate $|x_N-e^{c}| = \Theta(N^{-3})$.
+\end{proof}
+
+\section{Numerical Validation}
+We implement $x_n^{(\cdot)}$ at $150$-digit precision using \texttt{mpmath} and
+compute $D_n = x_{n+1}-x_n$ for $100\le n\le 10000$. Log--log regression over the
+grid $n=100,125,\dots,10000$ yields
+\[
+  \text{Family I: } \log|D_n| = -3.9973\,\log n - 2.9696,\quad R^2=0.9999997,
+\]
+\[
+  \text{Family II: } \log|D_n| = -3.9969\,\log n - 0.3391,\quad R^2=0.9999996,
+\]
+consistent with the predicted $n^{-4}$ decay. (The fitted slopes differ from
+$-4$ by a small finite-range curvature; the intercepts likewise carry an
+$O(n^{-1})$ correction. The numbers above are regenerated by the script in
+Appendix~\ref{app:code}.)
+
+\subsection{A log--log ``figure'' (self-contained, text-only)}
+A literal log--log plot of $|D_n|$ versus $n$ would appear as an approximately
+straight line with slope near $-4$ for both branches. The regression above
+provides a compact self-contained surrogate for the visual.
+
+Detailed convergence for $c=1$ (target $e\approx2.71828$):
+
+\begin{table}[h]\centering
+\begin{tabular}{rrrrr}
+\toprule
+$n$ & $|x_n^{(\mathrm{I})}-e|$ & $|D_n^{(\mathrm{I})}|$ & $|x_n^{(\mathrm{II})}-e|$ & $|D_n^{(\mathrm{II})}|$\\
+\midrule
+100  & $1.74\times10^{-8}$  & $5.09\times10^{-10}$ & $2.41\times10^{-7}$  & $7.06\times10^{-9}$\\
+500  & $1.40\times10^{-10}$ & $8.36\times10^{-13}$ & $1.95\times10^{-9}$  & $1.16\times10^{-11}$\\
+1000 & $1.75\times10^{-11}$ & $5.24\times10^{-14}$ & $2.44\times10^{-10}$ & $7.29\times10^{-13}$\\
+5000 & $1.40\times10^{-13}$ & $8.40\times10^{-17}$ & $1.95\times10^{-12}$ & $1.17\times10^{-15}$\\
+\bottomrule
+\end{tabular}
+\caption{Convergence of $x_n^{(\cdot)}$ to $e$ ($c=1$) at 150-digit precision.}
+\label{tab:c1}
+\end{table}
+
+\subsection{Generality check: additional values of $c$}
+Table~\ref{tab:gen} reports representative errors and differences for $c=2$ and
+$c=-1$.
+
+\begin{table}[h]\centering
+\begin{tabular}{rrrrr}
+\toprule
+$c$ & $n$ & $|x_n^{(\mathrm{I})}-e^{c}|$ & $|D_n^{(\mathrm{I})}|$ & $|D_n^{(\mathrm{II})}|$\\
+\midrule
+$2$  & 1000 & $9.52\times10^{-11}$ & $2.85\times10^{-13}$ & $3.97\times10^{-12}$\\
+$2$  & 5000 & $7.62\times10^{-13}$ & $4.57\times10^{-16}$ & $6.36\times10^{-15}$\\
+$-1$ & 1000 & $2.37\times10^{-12}$ & $7.09\times10^{-15}$ & $9.87\times10^{-14}$\\
+$-1$ & 5000 & $1.90\times10^{-14}$ & $1.14\times10^{-17}$ & $1.58\times10^{-16}$\\
+\bottomrule
+\end{tabular}
+\caption{Illustrative generality check for $c=2$ and $c=-1$ at high precision.}
+\label{tab:gen}
+\end{table}
+
+\section{Comparison with Existing Methods}
+
+\subsection{Convergence-rate comparison}
+By Lemma~\ref{lem:tail}, if $D_n$ has the signed asymptotic
+$D_n = K n^{-(k+1)} + O(n^{-(k+2)})$ with $K\neq0$ (as holds for every family
+compared below), then $|x_N-L|=\Theta(N^{-k})$. Thus, for a target error
+$\varepsilon$, one expects $N\asymp\varepsilon^{-1/k}$ in such telescoping
+constructions.
+
+\begin{table}[h]\centering
+\begin{tabular}{llll}
+\toprule
+Method & Difference decay $D_n$ & Error decay $|x_N-L|$ & $N$ for $|x_N-L|<\varepsilon$\\
+\midrule
+Euler $(1+1/n)^n$             & $\Theta(n^{-2})$ & $\Theta(N^{-1})$ & $\asymp\varepsilon^{-1}$\\
+Classical $(1+c/n)^{cn}$      & $\Theta(n^{-2})$ & $\Theta(N^{-1})$ & $\asymp\varepsilon^{-1}$\\
+Order-3 (this work)           & $\Theta(n^{-4})$ & $\Theta(N^{-3})$ & $\asymp\varepsilon^{-1/3}$\\
+\bottomrule
+\end{tabular}
+\caption{Telescoping decay of differences and implied error rates (parameterized rows: fixed $c\neq0$).}
+\label{tab:compare}
+\end{table}
+
+\begin{remark}\label{rem:table3}
+An earlier draft listed the middle row as $\Theta(n^{-3})/\Theta(N^{-2})$ with
+target $e^{c}$; that is incorrect. For $(1+c/n)^{cn}$ the limit is $e^{c^2}$ and
+the difference order is $\Theta(n^{-2})$ (Proposition~\ref{prop:order1}); at
+$c=1$ it coincides with Euler's sequence in the first row. To obtain
+$O(N^{-2})$ error decay one must instead \emph{enlarge} the family (e.g.\ by an
+affine exponent); by Proposition~\ref{prop:order1} no nonconstant member of
+$(1+a/n)^{bn}$ has order $2$, so this is not pursued here.
+\end{remark}
+
+\subsection{Computational cost and limitations (pedagogical framing)}
+We make no competitive complexity claim. For a fixed working precision the
+construction attains tail error $<\varepsilon$ at index $N\asymp\varepsilon^{-1/3}$,
+so a single evaluation of $x_N$ suffices; the telescoping identity means one
+need not sum all $N$ differences. We deliberately state no bit-complexity bound:
+the cost of a real power $a^{b}$ at precision $p$ depends on the underlying
+$\exp/\log$ algorithm and is not $O(\log n)$ arithmetic operations in general. This is not
+intended as a competitive high-precision algorithm for computing $e^{c}$ (where
+AGM-based and related methods converge far faster). Instead, the value of the
+construction is primarily structural and pedagogical: it provides a compact
+closed-form example where higher-order cancellation can be derived, proved, and
+numerically verified end-to-end using only elementary expansions and a small
+parameter system. In particular, it is well-suited for illustrating (i) how
+asymptotic expansions control discrete differences, (ii) how cancellation
+constraints translate into algebraic equations, and (iii) how regression on
+log--log data can detect decay exponents in practice.
+
+\section{Open Problems}
+\begin{enumerate}
+  \item \textbf{Subleading corrections:} the $O(n^{-5})$ and higher terms are now
+        available in closed form through $A_4$ (\S\ref{sec:sub}); deriving the
+        complete expansion would explain the effective constants observed at
+        moderate $n$.
+  \item \textbf{Order-4 construction:} find explicit closed-form solutions
+        yielding $D_n=\Theta(n^{-5})$, likely requiring at least a cubic base or a
+        richer exponent structure. A natural next ansatz is
+        $x_n=(1+a_1/n+a_2/n^2+a_3/n^3)^{cn+\gamma}$, which introduces additional
+        degrees of freedom.
+  \item \textbf{Other constants (including $\gamma$):} extend the framework to
+        other constants using appropriate base families. A concrete target is the
+        Euler--Mascheroni constant $\gamma = \lim_{n\to\infty}(H_n-\log n)$,
+        $H_n=\sum_{k\le n}1/k$; one may try to match coefficients in
+        $y_n\approx\gamma + \tfrac{1}{2n} - \tfrac{1}{12n^2} + \tfrac{1}{120n^4}+\cdots$
+        to enforce cancellations in $\Delta y_n$; for accurate asymptotic formulas
+        for the special functions underlying such constant constructions, see
+        \cite{yangtian,yangtianarxiv}.
+  \item \textbf{Non-power forms:} investigate telescoping sequences outside the
+        power-form ansatz.
+  \item \textbf{Optimality:} characterize the maximal telescoping order achievable
+        under bounded algebraic complexity.
+\end{enumerate}
+
+\section{Conclusion}
+We presented an explicit closed-form two-branch construction of sequences
+converging to $e^{c}$ with telescoping order $3$ (i.e.\ $|D_n|=\Theta(n^{-4})$),
+obtained by enforcing coefficient-cancellation constraints within a
+quadratic-base, affine-exponent family, together with explicit signed leading
+constants $A_3^{(\cdot)}$ and the implied $\Theta(N^{-3})$ error rate. The broader
+point is that explicit telescoping families provide clean examples where
+difference-asymptotic control translates directly into error rates, making them
+useful both for analysis and for didactic illustration of convergence
+acceleration ideas~\cite{dlmf39}.
+
+\subsection*{Note on this revision}
+This is revision V5. Relative to V4 it corrects: the $A_3$ coefficient
+formula~\eqref{eq:A3}; the constants $A_3^{(\cdot)}$ and the multiplier
+$3e^{c}$ in~\eqref{eq:mainasy}; the classical baseline
+(Proposition~\ref{prop:order1}, Remark~\ref{rem:correction}); the design-principle
+indexing; the hypothesis of Lemma~\ref{lem:logdiff} and the signed-asymptotic
+caveat (Remark~\ref{rem:theta}); Table~\ref{tab:compare}'s middle row; the
+$c=0$ exception in the abstract; and several bibliographic entries. All numerical
+tables were regenerated from the committed driver
+(Appendix~\ref{app:code}); the one mis-rounded entry in the earlier Table~1
+($8.41\times10^{-17}\to8.40\times10^{-17}$) is corrected.
+
+\section*{Acknowledgments}
+The author acknowledges the use of AI-assisted tools as editorial and programming
+support during the preparation of this manuscript. All mathematical derivations,
+proofs, asymptotic expansions, and numerical computations reported in the paper
+were verified by the author against an independent verification driver shipped
+with the paper.
+
+\section*{Declaration of Competing Interest}
+The author declares no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this
+paper.
+
+\section*{Funding}
+The author reports no funding for this research.
+
+\begin{thebibliography}{99}
+\bibitem{brent} R.~P. Brent, \emph{Fast multiple-precision evaluation of elementary
+  functions}, J.\ ACM \textbf{23}(2) (1976), 242--251.
+\bibitem{glaisher} J.~W.~L. Glaisher, \emph{On the history of Euler's constant},
+  Messenger of Mathematics \textbf{1} (1872), 25--30.
+\bibitem{adams} J.~C. Adams, \emph{Note on the value of Euler's constant; likewise
+  on the values of the Napierian logarithms of 2, 3, 5, 7, and 10}, Proc.\ Royal
+  Soc.\ London \textbf{27} (1878), 88--94.
+\bibitem{mitchell} U.~G. Mitchell and M.~Strain, \emph{The number $e$}, Osiris
+  \textbf{1} (1936), 476--496.
+\bibitem{flajolet} R.~Sedgewick and P.~Flajolet, \emph{An Introduction to the
+  Analysis of Algorithms}, booksite Chapter~4, \emph{Asymptotic Approximations},
+  \url{https://aofa.cs.princeton.edu/40asymptotic/}.
+\bibitem{dlmf39} NIST Digital Library of Mathematical Functions, \S3.9
+  \emph{Acceleration of Convergence}, \url{https://dlmf.nist.gov/3.9}.
+\bibitem{corless2023} R.~M. Corless, \emph{Devilish tricks for sequence
+  acceleration}, Maple Transactions \textbf{3}(1) (2023), DOI
+  \url{https://doi.org/10.5206/mt.v3i1.14777}.
+\bibitem{richardson2024} C.~J. Oates, T.~Karvonen, A.~L. Teckentrup, M.~Strocchi,
+  and S.~A. Niederer, \emph{Probabilistic Richardson extrapolation}, J.\ Roy.\
+  Statist.\ Soc.\ Ser.\ B \textbf{87}(2) (2025), 457--479, DOI
+  \url{https://doi.org/10.1093/jrsssb/qkae098} (published online 26 December 2024).
+\bibitem{richardson2024arxiv} C.~J. Oates, T.~Karvonen, A.~L. Teckentrup, M.~Strocchi,
+  and S.~A. Niederer, \emph{Probabilistic Richardson extrapolation},
+  arXiv:2401.07562 (2024), \url{https://arxiv.org/abs/2401.07562}.
+\bibitem{yangtian} Z.-H. Yang and J.-F. Tian, \emph{An accurate approximation
+  formula for gamma function}, J.\ Inequalities \& Applications \textbf{2018},
+  Article 56, DOI \url{https://doi.org/10.1186/s13660-018-1646-6}.
+\bibitem{yangtianarxiv} Z.-H. Yang and J.-F. Tian, \emph{An accurate approximation
+  formula for gamma function}, arXiv:1712.08051 (2017),
+  \url{https://arxiv.org/abs/1712.08051}.
+\bibitem{balditerative} J.~Bald, \emph{Telescoping representations of classical
+  iterative methods and constants}, Zenodo (2025), version DOI
+  \url{https://doi.org/10.5281/zenodo.17605159}; concept DOI
+  \url{https://doi.org/10.5281/zenodo.17605158}.
+\end{thebibliography}
+
+\appendix
+\section{Reproducibility Code (Python)}\label{app:code}
+This appendix provides a self-contained script reproducing the high-precision
+numerical validation in \S5: computation of $x_n^{(\mathrm{I})}$,
+$x_n^{(\mathrm{II})}$, differences $D_n=x_{n+1}-x_n$, log--log slope estimates of
+$|D_n|$ versus $n$, and sample convergence values for $c=1,2,-1$.
+
+\emph{Dependencies.} \texttt{mpmath} (arbitrary precision). The full verification
+driver (\texttt{code/verify\_hoc.py}), which additionally checks the symbolic
+coefficients~\eqref{eq:A3}--\eqref{eq:A4} and \emph{asserts every claimed sign and
+constant}, is available in the reproduction package.
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize,breaklines=true,frame=single]
+import mpmath as mp
+
+def xI(n, c):
+    n = mp.mpf(n); s3 = mp.sqrt(3)
+    return mp.power(1 + 1/n + s3/(6*n**2), c*n + c*(mp.mpf(1)/2 - s3/6))
+
+def xII(n, c):
+    n = mp.mpf(n); s3 = mp.sqrt(3)
+    return mp.power(1 + 1/n - s3/(6*n**2), c*n + c*(mp.mpf(1)/2 + s3/6))
+
+def slope(f, c, n0=100, n1=10000, step=25):
+    ns = list(range(n0, n1+1, step))
+    xs = [mp.log(n) for n in ns]
+    ys = [mp.log(mp.fabs(f(n+1, c) - f(n, c))) for n in ns]
+    m = len(ns); mx = mp.fsum(xs)/m; my = mp.fsum(ys)/m
+    cov = mp.fsum([(xs[i]-mx)*(ys[i]-my) for i in range(m)])
+    var = mp.fsum([(xs[i]-mx)**2 for i in range(m)])
+    return cov/var, my - (cov/var)*mx
+
+if __name__ == "__main__":
+    mp.mp.dps = 150
+    c = mp.mpf(1); target = mp.e**c
+    print("slope(I) :", slope(xI, c))
+    print("slope(II):", slope(xII, c))
+    for n in [100, 500, 1000, 5000]:
+        print(n, mp.fabs(xI(n,c)-target), mp.fabs(xI(n+1,c)-xI(n,c)),
+                 mp.fabs(xII(n,c)-target), mp.fabs(xII(n+1,c)-xII(n,c)))
+    # leading-constant check:  n^4 * D_n  ->  -3 e^c A3
+    for f, A3 in [(xI, (2*mp.sqrt(3)-3)/72), (xII, -(3+2*mp.sqrt(3))/72)]:
+        n = 10**5
+        print("n^4*D_n ->", (f(n+1,c)-f(n,c))*n**4, " predicted", -3*mp.e*A3)
+\end{lstlisting}
+
+\section{Verification Summary}\label{app:verify}
+The companion driver (\texttt{code/verify\_hoc.py}) regenerates every numeral in
+this paper and asserts each claimed sign and constant (and exits with nonzero
+status on any failed assertion); it reports \texttt{ALL ASSERTIONS PASS}.
+Symbolically it confirms \eqref{eq:c0}--\eqref{eq:A4} (including the general
+$A_4$ identity), $A_1=A_2=0$ on both branches, and the constants
+$A_3^{(\mathrm{I})}=c(2\sqrt3-3)/72$, $A_3^{(\mathrm{II})}=-c(3+2\sqrt3)/72$,
+$A_4^{(\mathrm{I},\mathrm{II})}=c(39\mp25\sqrt3)/720$. Numerically it confirms
+$\lim x_n=e^{c}$, $n^4D_n\to-3e^{c}A_3$ and $n^3(x_n-e^{c})\to e^{c}A_3$ with the
+correct signs, every tabulated value in Tables~\ref{tab:c1}--\ref{tab:gen}, the
+regression slopes and $R^2$, and the corrected classical baseline
+$D_n\sim e^{ab}a^2b/(2n^2)$. The exact algebraic core (the branch cancellations
+and the constants $A_3$, $A_4$) is machine-checked in Lean~4
+(\texttt{lean/ExpHOC}); the gate reports \texttt{PASS} (13 theorems, standard
+axioms only).
+
+The complete reproduction package --- manuscript source, driver and its saved
+output, the Lean development, and the independent audit reports --- is available
+at \url{https://github.com/jpbald93/telescoping-exponential-approximants}.
+
+\end{document}
