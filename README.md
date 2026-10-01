@@ -71,6 +71,8 @@ export PATH="$HOME/.elan/bin:$PATH"
 ./gate.sh                                # -> PASS (13 theorems, standard axioms only)
 ```
 
+`scratch/Satisfiable.lean` gives, for every theorem with hypotheses, a Lean-checked example showing the hypotheses can all be met (compile with `lake env lean scratch/Satisfiable.lean`).
+
 ## Revision history
 
 This is **V5**. Earlier versions circulated with the following defects, all repaired here (and
